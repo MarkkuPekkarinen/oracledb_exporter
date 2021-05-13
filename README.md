@@ -39,7 +39,7 @@ The following metrics are exposed currently.
 - oracledb_wait_time_user_io
 - oracledb_tablespace_bytes
 - oracledb_tablespace_max_bytes
-- oracledb_tablespace_bytes_free
+- oracledb_tablespace_free
 - oracledb_process_count
 - oracledb_resource_current_utilization
 - oracledb_resource_limit_value
@@ -104,6 +104,8 @@ export DATA_SOURCE_NAME=user/password@//myhost:1521/service
 export DATA_SOURCE_NAME=user/password@//primaryhost:1521,standbyhost:1521/service
 # 19c client for primary/standby configuration with options
 export DATA_SOURCE_NAME=user/password@//primaryhost:1521,standbyhost:1521/service?connect_timeout=5&transport_connect_timeout=3&retry_count=3
+# 19c client for ASM instance connection (requires SYSDBA)
+export DATA_SOURCE_NAME=user/password@//primaryhost:1521,standbyhost:1521/+ASM?as=sysdba
 # Then run the exporter
 /path/to/binary/oracledb_exporter --log.level error --web.listen-address 0.0.0.0:9161
 ```
@@ -111,10 +113,10 @@ export DATA_SOURCE_NAME=user/password@//primaryhost:1521,standbyhost:1521/servic
 # Integration with System D
 
 Create **oracledb_exporter** user with disabled login and **oracledb_exporter** group\
-mkdir /etc/etc/oracledb_exporter\
-chown root:oracledb_exporter /etc/etc/oracledb_exporter  
-chmod 775 /etc/etc/oracledb_exporter  
-Put config files to **/etc/etc/oracledb_exporter**  
+mkdir /etc/oracledb_exporter\
+chown root:oracledb_exporter /etc/oracledb_exporter  
+chmod 775 /etc/oracledb_exporter  
+Put config files to **/etc/oracledb_exporter**  
 Put binary to **/usr/local/bin**
 
 Create file **/etc/systemd/system/oracledb_exporter.service** with the following content:
